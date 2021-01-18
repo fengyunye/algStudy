@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
 
 // 两个数组求交集
@@ -212,20 +213,82 @@ func threeSum(nums []int) [][]int {
 		current := nums[i]
 		left := i + 1
 		right := len(nums) - 1
-		for left < right {
-			res := current + nums[left] + nums[right]
-			if res < 0 {
-				left++
-			} else if res > 0 {
-				right--
-			} else {
-				result = append(result, []int{nums[i], nums[left], nums[right]})
-				left++
-				right--
+		// 需要处理重复值 选定值重复的话，需要跳过
+		if i == 0 || nums[i] != nums[i-1] {
+			for left < right {
+				res := current + nums[left] + nums[right]
+				if res < 0 {
+					left++
+				} else if res > 0 {
+					right--
+				} else {
+					result = append(result, []int{nums[i], nums[left], nums[right]})
+					// 左指针和右指针也需要判断
+					for left < right && nums[left] == nums[left+1] {
+						left++
+					}
+					for left < right && nums[right] == nums[right-1] {
+						right--
+					}
+					left++
+					right--
+				}
 			}
 		}
+
 	}
 	return result
+}
+
+// 纯规律型
+
+//LEETCODEISHIRING
+//
+//3
+//
+//L   C   I   R
+//E T O E S I I G
+//E   D   H   N
+//
+//0
+//1
+//2   3  4
+//1
+//0
+//1
+//2
+//1
+//LCIRETOESIIGEDHN
+//4
+//
+//L     D    R
+//E   O E  I I
+//E C   I H  N
+//T     S    G
+//LDREOEIIECIHNTSG
+func convert(s string, numRows int) string {
+	length := len(s)
+	if length <= numRows {
+		return s
+	}
+	stringByte := []byte(s)
+	stringSince := make([]string, numRows)
+	// 按周期 2n - 2
+	cycle := 2*numRows - 2
+	for i := 0; i < length; i++ {
+		mod := i % cycle
+		var index int
+		if mod < numRows {
+			// 小于行数 就是mod
+			index = mod
+		} else {
+			// 大于行数 周长 - mod
+			index = cycle - mod
+		}
+		stringSince[index] += string(stringByte[i])
+	}
+	fmt.Println(stringSince)
+	return strings.Join(stringSince, "")
 }
 func main() {
 	/**********************求交集****************************/
@@ -256,6 +319,9 @@ func main() {
 	//array1 := []int{2, 5, 5, 11}
 	//fmt.Println(twoSumV2(array1, 10))
 	/**********************3数求和****************************/
-	array1 := []int{-1, 0, 1, 2, -1, -4}
-	fmt.Println(threeSum(array1))
+	//array1 := []int{-1, 0, 1, 2, -1, -4}
+	//fmt.Println(threeSum(array1))
+	/**********************z字形变换****************************/
+	res := convert("PAYPALISHIRING", 3)
+	fmt.Println(res)
 }
