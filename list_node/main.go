@@ -293,12 +293,50 @@ func middleNode(head *Node) *Node {
 		if fast.Next != nil && fast.Next.Next != nil {
 			fast = fast.Next.Next
 			slow = slow.Next
-		} else {
+		} else if fast.Next != nil && fast.Next.Next == nil {
+			// 偶数项，取slow后一位
 			fast = fast.Next
 			slow = slow.Next
+		} else {
+			// 奇数项，直接返回
+			fast = fast.Next
 		}
 	}
 	return slow
+}
+
+//给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。
+
+//请你将两个数相加，并以相同形式返回一个表示和的链表。
+
+//你可以假设除了数字 0 之外，这两个数都不会以 0 开头。
+
+// - 2 链表两数想加
+func addTwoNumbers(l1 *Node, l2 *Node) *Node {
+	// 新链表存储结果，哨兵返回值
+	list := &Node{
+		Data: 0,
+		Next: nil,
+	}
+	result := list
+	temp := 0 // 代表进位，第一次不进位
+	for l1 != nil || l2 != nil {
+		if l1 != nil {
+			temp += l1.Data.(int)
+			l1 = l1.Next
+		}
+		if l2 != nil {
+			temp += l2.Data.(int)
+			l2 = l2.Next
+		}
+		list.Next = &Node{
+			Data: temp % 10,
+			Next: nil,
+		}
+		temp = temp / 10
+		list = list.Next
+	}
+	return result.Next
 }
 
 func Test() {
@@ -313,11 +351,44 @@ func Test() {
 	fmt.Println(current)
 }
 
+func deleteDuplicates(head *Node) *Node {
+	// 定义哨兵
+	result := &Node{}
+	result.Next = head
+	// 因为是排好序的，所以只需要比较相邻
+	for head != nil && head.Next != nil {
+		if head.Data == head.Next.Data {
+			// 删除下一项
+			head.Next = head.Next.Next
+		} else {
+			// 指向下一个节点
+			head = head.Next
+		}
+	}
+	return result.Next
+}
+
+// 移除
+func removeElements(head *Node, val int) *Node {
+	// 定义哨兵节点
+	result := &Node{}
+	result.Next = head
+	current := result
+	for current != nil && current.Next != nil {
+		if current.Next.Data == val {
+			current.Next = current.Next.Next
+		} else {
+			current = current.Next
+		}
+	}
+	return result.Next
+}
+
 func main() {
-	arr1 := [5]int{1, 2, 3, 4, 5}
-	arr2 := [5]int{2, 3, 4, 5, 6}
-	list1 := ArrayToList(arr1[:])
-	list2 := ArrayToList(arr2[:])
+	//arr1 := [5]int{1, 2, 3, 4, 5}
+	//arr2 := [5]int{2, 3, 4, 5, 6}
+	//list1 := ArrayToList(arr1[:])
+	//list2 := ArrayToList(arr2[:])
 	////list := &List{}
 	////list.Append(1)
 	////list.Append(2)
@@ -327,12 +398,12 @@ func main() {
 	////list.HeadNode = ReverseList(list.HeadNode)
 	////list1.ShowList()
 	////list2.ShowList()
-	mergeList := MergeList(list1.HeadNode, list2.HeadNode)
-	currentList := &List{}
-	currentList.HeadNode = mergeList
-	currentList.ShowList()
-	j := middleNode(currentList.HeadNode)
-	fmt.Println(j)
+	//mergeList := MergeList(list1.HeadNode, list2.HeadNode)
+	//currentList := &List{}
+	//currentList.HeadNode = mergeList
+	//currentList.ShowList()
+	//j := middleNode(currentList.HeadNode)
+	//fmt.Println(j)
 	//Test()
 	//list.Insert(2, 1)
 	//list.PrintList()
@@ -343,4 +414,21 @@ func main() {
 	//fmt.Println(*list.next)
 	//var b = []int{1, 2, 3, 5}
 	//ArrayToNode(b)
+
+	arr3 := [3]int{2, 4, 3}
+	arr4 := [3]int{5, 6, 4}
+	list3 := ArrayToList(arr3[:])
+	list4 := ArrayToList(arr4[:])
+	newNode := addTwoNumbers(list3.HeadNode, list4.HeadNode)
+	showList := &List{
+		newNode,
+	}
+	showList.ShowList()
+
+	arr5 := [3]int{1, 1, 1}
+
+	list5 := ArrayToList(arr5[:])
+	deleteDuplicates(list5.HeadNode)
+	removeElements(list5.HeadNode, 1)
+
 }
