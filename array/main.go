@@ -290,6 +290,25 @@ func convert(s string, numRows int) string {
 	fmt.Println(stringSince)
 	return strings.Join(stringSince, "")
 }
+
+// 合并两个有序数组
+func merge(nums1 []int, m int, nums2 []int, n int) {
+	// 从最后一位开始迁移
+	mCurrent, nCurrent, p := m-1, n-1, m+n-1
+
+	for nCurrent >= 0 {
+		if mCurrent >= 0 && nums1[mCurrent] > nums2[nCurrent] {
+			nums1[p] = nums1[mCurrent]
+			mCurrent--
+		} else {
+			nums1[p] = nums2[nCurrent]
+			nCurrent--
+		}
+		p--
+	}
+	fmt.Println(nums1)
+
+}
 func main() {
 	/**********************求交集****************************/
 	//array1 := []int{1, 2, 3, 2, 1}
@@ -322,6 +341,10 @@ func main() {
 	//array1 := []int{-1, 0, 1, 2, -1, -4}
 	//fmt.Println(threeSum(array1))
 	/**********************z字形变换****************************/
-	res := convert("PAYPALISHIRING", 3)
-	fmt.Println(res)
+	//res := convert("PAYPALISHIRING", 3)
+	//fmt.Println(res)
+	/**********************合并两个有序数组****************************/
+	array1 := []int{1, 2, 3, 0, 0, 0}
+	array2 := []int{2, 3, 5}
+	merge(array1, 3, array2, 3)
 }
