@@ -309,6 +309,25 @@ func merge(nums1 []int, m int, nums2 []int, n int) {
 	fmt.Println(nums1)
 
 }
+
+//斐波那契数
+func fib(n int) int {
+	// 递归解法效率太低
+	//if n <= 1 {
+	//	return n
+	//}
+	//return fib(n-1) + fib(n -2)
+	if n <= 1 {
+		return n
+	}
+	pre, prePre, current := 1, 0, 0
+	for i := 2; i <= n; i++ {
+		current = pre + prePre
+		prePre = pre
+		pre = current
+	}
+	return current
+}
 func main() {
 	/**********************求交集****************************/
 	//array1 := []int{1, 2, 3, 2, 1}
@@ -344,7 +363,9 @@ func main() {
 	//res := convert("PAYPALISHIRING", 3)
 	//fmt.Println(res)
 	/**********************合并两个有序数组****************************/
-	array1 := []int{1, 2, 3, 0, 0, 0}
-	array2 := []int{2, 3, 5}
-	merge(array1, 3, array2, 3)
+	//array1 := []int{1, 2, 3, 0, 0, 0}
+	//array2 := []int{2, 3, 5}
+	//merge(array1, 3, array2, 3)
+	/****************************斐波那契数*****************************/
+	fmt.Println(fib(2))
 }
