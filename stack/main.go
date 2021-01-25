@@ -1,5 +1,9 @@
 package main
 
+import (
+	"strconv"
+)
+
 type Stack struct {
 	Items   []int
 	Current int
@@ -93,6 +97,30 @@ func reBuildString(s string) string {
 		}
 	}
 	return string(SItem)
+}
+
+// 棒球比赛
+func calPoints(ops []string) int {
+	var stack []int
+	for i := 0; i < len(ops); i++ {
+		if ops[i] == "C" {
+			stack = stack[:len(stack)-1]
+		} else if ops[i] == "D" {
+			current := stack[len(stack)-1]
+			stack = append(stack, current*2)
+		} else if ops[i] == "+" {
+			sum := stack[len(stack)-1] + stack[len(stack)-2]
+			stack = append(stack, sum)
+		} else {
+			intNumber, _ := strconv.Atoi(ops[i])
+			stack = append(stack, intNumber)
+		}
+	}
+	sum := 0
+	for j := 0; j < len(stack); j++ {
+		sum += stack[j]
+	}
+	return sum
 }
 
 // 栈相关
