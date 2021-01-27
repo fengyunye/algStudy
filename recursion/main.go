@@ -57,6 +57,24 @@ func abs(x int) int {
 	return x
 }
 
+// 给定一个二叉树，计算 整个树 的坡度 。
+func findTilt(root *TreeNode) int {
+	sum := 0
+	helper(root, &sum)
+	return sum
+}
+
+// 计算每个节点的和
+func helper(root *TreeNode, sum *int) int {
+	if root == nil {
+		return 0
+	}
+	left := helper(root.Left, sum)
+	right := helper(root.Right, sum)
+	*sum += abs(left - right)
+	return left + right + root.Val
+}
+
 //青蛙跳台阶问题
 func numWays(n int) int {
 	if n == 0 {
