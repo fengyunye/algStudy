@@ -46,6 +46,11 @@ func InsertSort(arr []int) []int {
 	return arr
 }
 
+// 希尔排序
+func shellSort(arr []int) []int {
+	return arr
+}
+
 // 选择排序
 // 和插入排序方法类似， 分为两个序列，一个有序，一个无序，每次从无序中找最小的
 //  每次都叫唤位置  5  8 5 2    5 -1  5 -2
@@ -105,14 +110,68 @@ func Merge(left []int, right []int) []int {
 
 // 快速排序，思路与快速排序一直
 func QuickSort(arr []int) []int {
+	return _quickSort(arr, 0, len(arr)-1)
+}
+
+func _quickSort(arr []int, left int, right int) []int {
+	// 递归终止条件
+	if left < right {
+		partitionIndex := partition(arr, left, right)
+		_quickSort(arr, left, partitionIndex-1)
+		_quickSort(arr, partitionIndex+1, right)
+	}
 	return arr
 }
 
+// 获取基准点
+func partition(arr []int, left int, right int) int {
+	// 非常巧妙的算法, 以最右边为基准点
+	pivot := right
+	i := left
+	for j := i; j < right; j++ {
+		// 将数组想像成  left  ~ i -1  为已排序数组
+		// i ~ right - 1 为未排序空间
+		// 每次 从i ~ right - 1 取一个数与 最right 比较
+		// 小于就往已排序数组中插入
+		if arr[j] < arr[pivot] {
+			// 只要
+			arr[i], arr[j] = arr[j], arr[i]
+			i++
+		}
+	}
+	arr[i], arr[pivot] = arr[pivot], arr[i]
+	// i的下标达标中间 将最末的
+	return i
+}
+
+func countingSort(arr []int, maxValue int) []int {
+	bucketLen := maxValue + 1
+	bucket := make([]int, bucketLen) // 初始为0的数组
+
+	sortedIndex := 0
+	length := len(arr)
+
+	for i := 0; i < length; i++ {
+		bucket[arr[i]] += 1
+	}
+
+	for j := 0; j < bucketLen; j++ {
+		for bucket[j] > 0 {
+			arr[sortedIndex] = j
+			sortedIndex += 1
+			bucket[j] -= 1
+		}
+	}
+
+	return arr
+}
 func main() {
 	fmt.Println("今天来搞搞排序")
 	sortArr := []int{2, 9, 3, 4, 8, 3}
-	fmt.Println(BubbleSort(sortArr))
-	fmt.Println(InsertSort(sortArr))
-	fmt.Println(SelectSort(sortArr))
-	fmt.Println(MergeSort(sortArr))
+	//fmt.Println(BubbleSort(sortArr))
+	//fmt.Println(InsertSort(sortArr))
+	//fmt.Println(SelectSort(sortArr))
+	//fmt.Println(MergeSort(sortArr))
+	fmt.Println(QuickSort(sortArr))
+	fmt.Println(countingSort(sortArr, 9))
 }
