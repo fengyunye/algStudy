@@ -196,12 +196,11 @@ func ReverseList(n *Node) *Node {
 // 直接反转 需要预先存储 pre 和 next
 func ReverseListByFor(n *Node) *Node {
 	var pre *Node
-	curr := n
-	for curr != nil {
-		next := curr.Next
-		curr.Next = pre
-		pre = curr
-		curr = next
+	for n != nil {
+		next := n.Next
+		n.Next = pre
+		pre = n
+		n = next
 	}
 	return pre
 }
@@ -221,17 +220,17 @@ func HasCycle(head *Node) bool {
 
 // 定义快慢指针 如果链表里有环, 跑得慢的和跑的快的一定会相遇，
 func HasCycleV2(head *Node) bool {
+	// 快慢指针
 	if head == nil || head.Next == nil {
 		return false
 	}
 	fast := head.Next.Next
-	slow := head.Next
-	for slow != fast {
-		if fast == nil || slow == nil {
-			return false
+	for fast != nil && head != nil && fast.Next != nil {
+		if fast == head {
+			return true
 		}
+		head = head.Next
 		fast = fast.Next.Next
-		slow = slow.Next
 	}
 	return false
 }
@@ -351,6 +350,7 @@ func Test() {
 	fmt.Println(current)
 }
 
+// 83. 删除排序链表中的重复元素
 func deleteDuplicates(head *Node) *Node {
 	// 定义哨兵
 	result := &Node{}
@@ -382,6 +382,29 @@ func removeElements(head *Node, val int) *Node {
 		}
 	}
 	return result.Next
+}
+
+// a + b = b + a 如果没有相交，一定会同时 =nil 并结束
+// 相交链表
+func getIntersectionNode(headA, headB *Node) *Node {
+	if headA == nil || headB == nil {
+		return nil
+	}
+	l1, l2 := headA, headB
+	for l1 != l2 {
+		if l1 != nil {
+			l1 = l1.Next
+		} else {
+			l1 = l2
+		}
+
+		if l2 != nil {
+			l2 = l2.Next
+		} else {
+			l2 = l1
+		}
+	}
+	return l1
 }
 
 func main() {
