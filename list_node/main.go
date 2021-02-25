@@ -287,17 +287,17 @@ func MergeList(node1 *Node, node2 *Node) *Node {
 // 龟兔法， 快指针到了，满指针才到一半
 // 偶数项   6
 func middleNode(head *Node) *Node {
-	fast, slow := head, head
-	for fast.Next != nil {
+	// 快慢指针
+	slow, fast := head, head
+
+	for fast != nil {
 		if fast.Next != nil && fast.Next.Next != nil {
 			fast = fast.Next.Next
 			slow = slow.Next
 		} else if fast.Next != nil && fast.Next.Next == nil {
-			// 偶数项，取slow后一位
 			fast = fast.Next
 			slow = slow.Next
 		} else {
-			// 奇数项，直接返回
 			fast = fast.Next
 		}
 	}

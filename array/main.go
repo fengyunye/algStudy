@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// 两个数组求交集
+// 两个数组求交集 - 350
 func intersect(nums1 []int, nums2 []int) []int {
 	numMap := map[int]int{}
 	for _, v := range nums1 {
@@ -49,7 +49,7 @@ func intersectSort(nums1 []int, nums2 []int) []int {
 //编写一个函数来查找字符串数组中的最长公共前缀。
 //如果不存在公共前缀，返回空字符串 ""。 - 14
 // 解法 1 简单暴力循环匹配
-
+// - 14
 func longestCommonPrefix(strs []string) string {
 	if len(strs) < 1 {
 		return ""
@@ -65,6 +65,19 @@ func longestCommonPrefix(strs []string) string {
 	return strs[0]
 }
 
+// 买卖股票的最佳时机 - 121
+func maxProfitV1(prices []int) int {
+	minPrice, maxProfitValue := 0, 0
+	for i := 0; i < len(prices); i++ {
+		if i == 0 || prices[i] < minPrice {
+			minPrice = prices[i]
+		} else if prices[i]-minPrice > maxProfitValue {
+			maxProfitValue = prices[i] - minPrice
+		}
+	}
+	return maxProfitValue
+}
+
 //给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
 
 //设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
@@ -73,29 +86,29 @@ func longestCommonPrefix(strs []string) string {
 
 func maxProfit(prices []int) int {
 	n := len(prices)
-	//dp := make([][2]int, n)
-	//dp[0][1] = -prices[0]
-	//// 0 - 没有股票的收益
-	//// 1 - 持有股票的收益
-	//
-	//// 在最后一天的时候,手上没有股票的收益最大
-	//// 从第二天开始计算
-	//// 保证每一天的收益都是最大话
-	//// 动态规划， 当天没有股票， 要么是前一天也没有，或者是今天卖掉了,这两种选择一种
-	//
-	//for i := 1; i < n; i++ {
-	//	dp[i][0] = max(dp[i-1][0], dp[i - 1][1]+prices[i])   // 当天没有股票， 要么是前一天有，或者是今天卖掉了
-	//	dp[i][1] = max(dp[i-1][0]-prices[i], dp[i-1][1]) // 第二天有股票，要么是前一天没有，今天买入， 要么是前一天也有
-	//}
-	//return dp[n-1][0]
-	dp0 := 0
-	dp1 := -prices[0]
+	dp := make([][2]int, n)
+	dp[0][1] = -prices[0]
+	// 0 - 没有股票的收益
+	// 1 - 持有股票的收益
+
+	// 在最后一天的时候,手上没有股票的收益最大
+	// 从第二天开始计算
+	// 保证每一天的收益都是最大话
+	// 动态规划， 当天没有股票， 要么是前一天也没有，或者是今天卖掉了,这两种选择一种
 
 	for i := 1; i < n; i++ {
-		dp0 = max(dp0, dp1+prices[i])
-		dp1 = max(dp0-prices[i], dp1)
+		dp[i][0] = max(dp[i-1][0], dp[i-1][1]+prices[i]) // 当天没有股票， 要么是前一天有，或者是今天卖掉了
+		dp[i][1] = max(dp[i-1][0]-prices[i], dp[i-1][1]) // 第二天有股票，要么是前一天没有，今天买入， 要么是前一天也有
 	}
-	return dp0
+	return dp[n-1][0]
+	//dp0 := 0
+	//dp1 := -prices[0]
+	//
+	//for i := 1; i < n; i++ {
+	//	dp0 = max(dp0, dp1+prices[i])
+	//	dp1 = max(dp0-prices[i], dp1)
+	//}
+	//return dp0
 }
 
 // 给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
@@ -268,7 +281,7 @@ func threeSum(nums []int) [][]int {
 //LDREOEIIECIHNTSG
 func convert(s string, numRows int) string {
 	length := len(s)
-	if length <= numRows {
+	if length <= numRows || numRows < 2 {
 		return s
 	}
 	stringByte := []byte(s)
@@ -293,9 +306,11 @@ func convert(s string, numRows int) string {
 
 // 合并两个有序数组
 func merge(nums1 []int, m int, nums2 []int, n int) {
-	// 从最后一位开始迁移
+	// 双指针，从后往前迁移，不需要额外空间
 	mCurrent, nCurrent, p := m-1, n-1, m+n-1
+	// nums1 用于输出
 
+	// 需要将nums全部放入nums1
 	for nCurrent >= 0 {
 		if mCurrent >= 0 && nums1[mCurrent] > nums2[nCurrent] {
 			nums1[p] = nums1[mCurrent]
@@ -329,6 +344,11 @@ func fib(n int) int {
 	return current
 }
 func main() {
+	/**********************股票买卖****************************/
+	//array1 := []int{7,1,5,3,6,4}
+	//
+	//fmt.Println(maxProfit(array1))
+	/**********************走最长公共前缀****************************/
 	/**********************求交集****************************/
 	//array1 := []int{1, 2, 3, 2, 1}
 	//array2 := []int{2, 2, 1}
@@ -345,9 +365,9 @@ func main() {
 	//array1 := []int{1, 2, 3, 4, 5, 6}
 	//rotate(array1, 2)
 	/**********************原地删除和移除重复项****************************/
-	//array1 := []int{1, 2, 2, 3, 4, 5, 6, 7, 8}
-	////removeElement(array1, 2)
-	//removeDuplicates(array1)
+	array1 := []int{1, 2, 2, 3, 4, 5, 6, 7, 8}
+	//removeElement(array1, 2)
+	removeDuplicates(array1)
 
 	/**********************原地删除和移除重复项****************************/
 	//array1 := []int{9, 9, 9, 9, 9}
@@ -367,5 +387,5 @@ func main() {
 	//array2 := []int{2, 3, 5}
 	//merge(array1, 3, array2, 3)
 	/****************************斐波那契数*****************************/
-	fmt.Println(fib(2))
+	//fmt.Println(fib(2))
 }
