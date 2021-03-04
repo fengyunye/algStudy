@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -304,7 +305,7 @@ func convert(s string, numRows int) string {
 	return strings.Join(stringSince, "")
 }
 
-// 合并两个有序数组
+// 合并两个有序数组 88
 func merge(nums1 []int, m int, nums2 []int, n int) {
 	// 双指针，从后往前迁移，不需要额外空间
 	mCurrent, nCurrent, p := m-1, n-1, m+n-1
@@ -322,10 +323,26 @@ func merge(nums1 []int, m int, nums2 []int, n int) {
 		p--
 	}
 	fmt.Println(nums1)
-
 }
 
-//斐波那契数
+// 53 最大子序和
+func maxSubArray(nums []int) int {
+	// 动态规划，保证没一项都是最大值，
+	// 每加一次就记录是否超过之前的最大值
+	maxValue := nums[0]
+
+	for i := 1; i < len(nums); i++ {
+		if nums[i]+nums[i-1] > nums[i] {
+			nums[i] += nums[i-1]
+		}
+		if nums[i] > maxValue {
+			maxValue = nums[i]
+		}
+	}
+	return maxValue
+}
+
+//斐波那契数 509
 func fib(n int) int {
 	// 递归解法效率太低
 	//if n <= 1 {
@@ -343,6 +360,140 @@ func fib(n int) int {
 	}
 	return current
 }
+
+// 二维数组查找
+// 剑指offer 04
+func findNumberIn2DArray(matrix [][]int, target int) bool {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return false
+	}
+	// 右上角开始寻找
+	rows := len(matrix)    // 行
+	cols := len(matrix[0]) // 列
+	col := cols - 1
+	row := 0
+	for col >= 0 && row < rows {
+		currentNum := matrix[row][col]
+		if currentNum == target {
+			return true
+		} else if currentNum > target {
+			// 当前值比目标值大，由于水平垂直都是递增，所以只能往左查找，改变列
+			col--
+		} else {
+			// 当前值比目标值小，水平垂直递增，只能通过向右或者向下查找， 但是因为是从右边找过来的，所以只能往下，
+			row++
+		}
+	}
+
+	return false
+}
+
+// 二分查找
+func bSearch(nums []int, n int, value int) int {
+	low := 0
+	high := n - 1
+
+	for high > low {
+		currentIndex := low + (high-low)/2
+		currentValue := nums[currentIndex]
+		if currentValue < value {
+			low++
+		} else if currentValue > value {
+			high--
+		} else {
+			return currentIndex
+		}
+	}
+	return -1
+}
+
+//两数向加 415
+func addStrings(num1 string, num2 string) string {
+	// 循环处理每一位字符
+	add := 0
+	res := ""
+	for i, j := len(num1)-1, len(num2)-1; i >= 0 || j >= 0 || add != 0; i, j = i-1, j-1 {
+		var x, y int
+		if i >= 0 {
+			x = int(num1[i] - '0')
+		}
+		if j >= 0 {
+			y = int(num2[j] - '0')
+		}
+		currentResult := x + y + add
+		// 从最后一位开始处理
+		res = strconv.Itoa(currentResult%10) + res
+		// 处理进位
+		add = currentResult / 10
+	}
+	return res
+}
+
+//
+//// 两数相乘 43
+func multiply(num1 string, num2 string) string {
+	if num1 == "0" || num2 == "0" {
+		return "0"
+	}
+	result := "0"
+	// num2 每一位都对 num1 做乘法， 然后累加
+	m, n := len(num1)-1, len(num2)-1
+	for j := n; j >= 0; j-- {
+		cur := ""
+		add := 0
+		y := int(num2[j] - '0')
+		// 从第二次开始要补0
+		for k := n - j; k > 0; k-- {
+			cur += "0"
+		}
+		for i := m; i >= 0; i-- {
+			x := int(num1[i] - '0')
+			currentResult := x*y + add
+			cur = strconv.Itoa(currentResult%10) + cur
+			add = currentResult / 10
+		}
+
+		// 如果还有进位需要处理
+		for ; add != 0; add /= 10 {
+			cur = strconv.Itoa(add%10) + cur
+		}
+		result = addStrings(result, cur)
+	}
+	return result
+}
+
+//
+func multiplyV2(num1 string, num2 string) string {
+	// 优化方案， 根据规律 m * n 最大 是 m + n 位，
+	if num1 == "0" || num2 == "0" {
+		return "0"
+	}
+	// 优化方案，使用数组，存储每一位数据，然后处理进位
+	// 最大位数 m*n  m + n
+	m, n := len(num1), len(num2)
+	resultArr := make([]int, m+n)
+
+	for i := m - 1; i >= 0; i-- {
+		x := int(num1[i] - '0')
+		for j := n - 1; j >= 0; j-- {
+			y := int(num2[j] - '0')
+			// i * j  进位放在 i + j , 余数放在 i + j + 1
+			sum := resultArr[i+j+1] + x*y
+			resultArr[i+j+1] = sum % 10
+			resultArr[i+j] += sum / 10
+		}
+	}
+	result := ""
+	// 将数组转换为字符
+	for k, v := range resultArr {
+		if k == 0 || v == 0 {
+			continue
+		}
+		result += strconv.Itoa(v)
+	}
+	return result
+}
+
 func main() {
 	/**********************股票买卖****************************/
 	//array1 := []int{7,1,5,3,6,4}
@@ -365,9 +516,9 @@ func main() {
 	//array1 := []int{1, 2, 3, 4, 5, 6}
 	//rotate(array1, 2)
 	/**********************原地删除和移除重复项****************************/
-	array1 := []int{1, 2, 2, 3, 4, 5, 6, 7, 8}
+	//array1 := []int{1, 2, 2, 3, 4, 5, 6, 7, 8}
 	//removeElement(array1, 2)
-	removeDuplicates(array1)
+	//removeDuplicates(array1)
 
 	/**********************原地删除和移除重复项****************************/
 	//array1 := []int{9, 9, 9, 9, 9}
@@ -388,4 +539,9 @@ func main() {
 	//merge(array1, 3, array2, 3)
 	/****************************斐波那契数*****************************/
 	//fmt.Println(fib(2))
+	/****************************斐波那契数*****************************/
+	//nums := []int{-2, 1, -3, 4, -1, 2, 1, -5, 4}
+	//fmt.Println(maxSubArray(nums))
+	/*******************************字符串向加********************/
+	fmt.Println(multiplyV2("123", "456"))
 }
