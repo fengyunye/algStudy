@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 )
 
@@ -43,38 +44,32 @@ func isValid(s string) bool {
 	if length%2 == 1 {
 		return false
 	}
-	// 设定一个map
 	stringMap := map[byte]byte{
-		')': '(',
 		'}': '{',
+		')': '(',
 		']': '[',
 	}
-	// 用栈存储
-	currentI := 0
 	item := make([]byte, length)
-	// 字符串转换为byte
-	stringByte := []byte(s)
-
+	// 栈
+	currentI := 0
 	for i := 0; i < length; i++ {
-		// 前半截字符直接入栈
-		if stringMap[stringByte[i]] > 0 {
+		stringByte := s[i]
+		if stringMap[stringByte] > 0 {
+			//
 			if currentI == 0 {
 				return false
 			}
-
-			// 如果当前字符是后半截，切栈顶元素和当前元素不是对应关系
-			if stringMap[stringByte[i]] != item[currentI-1] {
+			// 出现闭合性字符，一定要保证,前一项就是闭合性字符的前半截
+			if stringMap[stringByte] != item[currentI-1] {
 				return false
 			}
 			currentI--
-
 		} else {
-			// 入栈
-			item[currentI] = stringByte[i]
+			item[currentI] = stringByte
 			currentI++
 		}
-
 	}
+
 	return currentI == 0
 }
 
@@ -144,5 +139,6 @@ func main() {
 	//queue.Push(3)
 	//fmt.Println(queue)
 	backspaceCompare("ab#c", "ad#c")
+	fmt.Println(isValid("()[]{}"))
 
 }
