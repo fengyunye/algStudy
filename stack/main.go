@@ -138,7 +138,11 @@ func main() {
 	//queue.Push(2)
 	//queue.Push(3)
 	//fmt.Println(queue)
-	backspaceCompare("ab#c", "ad#c")
-	fmt.Println(isValid("()[]{}"))
+	//backspaceCompare("ab#c", "ad#c")
+	//fmt.Println(isValid("()[]{}"))
+	array := []int{10, 20, 30, 40}
+	slice := make([]int, 6)
+	n := copy(slice, array)
+	fmt.Println(n, slice)
 
 }
